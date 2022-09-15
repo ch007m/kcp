@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 # Defining some colors for output
 NC='\033[0m' # No Color
@@ -217,10 +217,10 @@ case $ACTION in
 
     note "Generate the syncer yaml resources against the cluster name: ${CLUSTER_NAME}"
     if [ -n ${KCP_API_RESOURCES} ]; then
-      note "Append some additonal resources to command: ${KCP_API_RESOURCES}"
-      KUBECONFIG=${KCP_CFG_PATH} k kcp workload sync ${CLUSTER_NAME} --resources ${KCP_API_RESOURCES} --syncer-image ghcr.io/kcp-dev/kcp/syncer:v${KCP_VERSION} -o syncer-${CLUSTER_NAME}.yml
-    else
-      KUBECONFIG=${KCP_CFG_PATH} k kcp workload sync ${CLUSTER_NAME} --syncer-image ghcr.io/kcp-dev/kcp/syncer:v${KCP_VERSION} -o syncer-${CLUSTER_NAME}.yml
+        KUBECONFIG=${KCP_CFG_PATH} k kcp workload sync ${CLUSTER_NAME} --syncer-image ghcr.io/kcp-dev/kcp/syncer:v${KCP_VERSION} -o syncer-${CLUSTER_NAME}.yml
+      else
+        note "Append some additonal resources to command: ${KCP_API_RESOURCES}"
+        KUBECONFIG=${KCP_CFG_PATH} k kcp workload sync ${CLUSTER_NAME} --resources ${KCP_API_RESOURCES} --syncer-image ghcr.io/kcp-dev/kcp/syncer:v${KCP_VERSION} -o syncer-${CLUSTER_NAME}.yml
     fi
 
     note "Deploy kcp syncer on kind"
