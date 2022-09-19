@@ -88,12 +88,12 @@ You can check the status of the kcp server and verify it is started:
 ./kcp.sh status
 ```
 
-And finally install the [syncer](https://github.com/kcp-dev/kcp/blob/main/docs/syncer.md) in order to allow kcp server to comunicate with the physical Kubernetes cluster. To do so, run the following commands:
+And finally install the [syncer](https://github.com/kcp-dev/kcp/blob/main/docs/syncer.md) in order to allow kcp server to communicate with the physical Kubernetes cluster. To do so, run the following command:
 
 ```bash
-./kcp.sh syncer -w $WORKPACE -c cluster1
+./kcp.sh syncer -w $WORKSPACE -c cluster1
 ```
-Note that the default value for $WORKPACE is `my-org`
+Note that the default value for $WORKSPACE is `my-org` it will be created under the `root` org level (root:my-org)
 
 Next, you can execute one of the following scenarios described hereafter.
 
@@ -105,7 +105,8 @@ Objective:
 - Access the application deployed on the physical cluster (e.g: kubectl proxy)
 - Move the workspace one level up (e.g `root`) and verify that no deployments exist as workspaces are isolated
 
-In order to point to the kcp cluster, we will use the configuration generated during the kcp installation:
+Make sure to use kubeconfig for your local KCP, for this use the configuration generated during the installation:
+
 ```bash
 export KUBECONFIG=$TMP/.kcp/admin.kubeconfig
 ```
@@ -119,12 +120,12 @@ Verify you have a kcp server up and running
 ````
 
 ### Use a kcp workspace
-Be sure that you are using the correct worspace:
+Be sure that you are using the correct workspace:
 
 ```bash
-kubectl kcp ws use root:$WORKPACE
+kubectl kcp ws use root:$WORKSPACE
 ```
-Note that $WORKSPACE needs to point to the workspace used for creating the `syncer` and the default value for $WORKPACE is `my-org` and
+Note that `$WORKSPACE` needs to point to the workspace used for creating the `syncer`.
 
 ### Deploy a Quarkus application
 
