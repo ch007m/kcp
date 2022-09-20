@@ -59,14 +59,44 @@ Arguments:
 ```
 **Remark**: The log of the kcp server started is available at <TEMP_DIR>/kcp-output.log
 
-To setup a demo, then execute by example the following commands :
+## Set up
+
+### Clean up 
+
+If you come from an old installation, you can perform a clean up by running the following commands, otherwise jump to [next step]():
+
 ```bash
-kind create cluster
+./kcp.sh clean
+kind delete cluster --name cluster1
+```
+
+### Create a physical cluster and install `kcp`
+
+We need a physical cluster backing the kcp server that we will create locally using `Kind`. 
+ 
+```bash
+kind create cluster --name cluster1
+```
+Then, we will instal `Kcp` itself:
+
+```bash
 ./kcp.sh install -v 0.8.2
 ./kcp.sh start
 ```
+You can check the status of the kcp server and verify it is started:
 
-Next, in a second terminal, you can execute one of the following scenarios described hereafter.
+```bash
+./kcp.sh status
+```
+
+And finally install the [syncer](https://github.com/kcp-dev/kcp/blob/main/docs/syncer.md) in order to allow kcp server to communicate with the physical Kubernetes cluster. To do so, run the following command:
+
+```bash
+./kcp.sh syncer -w $WORKSPACE -c cluster1
+```
+Note that the default value for $WORKSPACE is `my-org` it will be created under the `root` org level (root:my-org)
+
+Next, you can execute one of the following scenarios described hereafter.
 
 ## Scenario 1 : One workspace
 
@@ -76,9 +106,66 @@ Objective:
 - Access the application deployed on the physical cluster (e.g: kubectl proxy)
 - Move the workspace one level up (e.g `root`) and verify that no deployments exist as workspaces are isolated
 
-### Step-by-Step
+Make sure to use kubeconfig for your local KCP, for this use the configuration generated during the installation:
 
-TODO
+```bash
+export KUBECONFIG=$TMP/.kcp/admin.kubeconfig
+```
+Set the $TMP according to your kcp installation.
+
+## Step-by-Step
+
+Verify you have a kcp server up and running
+````bash
+./kcp.sh status
+````
+
+### Use a kcp workspace
+Be sure that you are using the correct workspace:
+
+```bash
+kubectl kcp ws use root:$WORKSPACE
+```
+Note that `$WORKSPACE` needs to point to the workspace used for creating the `syncer`.
+
+### Deploy a Quarkus application
+
+We deploy a Quarkus application from a predefined image
+
+```bash
+
+kubectl create deployment quarkus --image=quay.io/rhdevelopers/quarkus-demo:v1
+
+```
+
+### Check that deploy went well
+
+First, inspect the status of the rollout by running:
+
+```bash
+kubectl rollout status deployment/quarkus
+
+```
+
+Then, check deployments availables in the current workspace, you should have the quarkus one:
+```bash
+kubectl get deployments
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+quarkus   1/1     1            1           16h
+```
+
+### Change to another workspace and verify that no deployments exist
+
+You can move to the parent workspace which is `root`:
+```bash
+kubectl kcp ws use ..
+``` 
+Verify that there is no deployments in the current workspace:
+
+```bash
+kubectl get deployments                                                                                                               
+error: the server doesn't have a resource type "deployments"
+```
 
 ### End-to-end script
 
