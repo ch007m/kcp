@@ -187,7 +187,7 @@ case $ACTION in
     ;;
   start)
     note "Remove previously files created"
-    rm -rf .kcp
+    rm -rf .kcp || true
 
     if [ -f "./bin/kcp" ]; then
       note "Starting the kcp server"
