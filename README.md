@@ -208,7 +208,8 @@ TODO
 
 ### End-to-end script
 
-TODO
+To execute the steps of this `end to end` scenario, open a terminal & move to the kcp folder.
+Next, execute the following script: `./scenario-2.sh`.
 
 ## Scenario 3 : One workspace with additional CRDs (ingress, service)
 
@@ -236,7 +237,8 @@ curl http://quarkus.<IP>.sslip.io/
 
 ### End-to-end script
 
-TODO
+To execute the steps of this `end to end` scenario, open a terminal & move to the kcp folder.
+Next, execute the following script: `./scenario-3.sh`.
 
 # Skupper
 
