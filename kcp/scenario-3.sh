@@ -4,7 +4,7 @@
 # End to end scenario 3
 #
 
-source common.sh
+source ../common.sh
 
 if ! command -v helm &> /dev/null; then
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -19,9 +19,9 @@ if [[ ${HELM_VERSION} < "v3.0.0" ]]; then
   exit 1
 fi
 
-./kcp.sh clean
-./kcp.sh install -v ${KCP_VERSION}
-./kcp.sh start
+./server.sh clean
+./server.sh install -v ${KCP_VERSION}
+./server.sh start
 
 # Kind cluster config template
 kindCfg=$(cat <<EOF
@@ -67,7 +67,7 @@ done
 echo "KCP is started :-)"
 
 kubectl ctx kind-cluster1
-./kcp.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
+./server.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
 
 note "Moving to the root:${KCP_WORKSPACE} workspace"
 note ">> k kcp ws use root:${KCP_WORKSPACE}"

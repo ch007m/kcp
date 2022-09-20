@@ -37,10 +37,10 @@ Use the arg `-h` to get the help: `scenario-*.sh -h`.
 
 ## How to play with kcp
 
-To simplify our life when we play with the kcp server, we have developed the bash script `./kcp.sh` able to support the following actions:
+To simplify our life when we play with the kcp server, we have developed the following bash script `./kcp/server.sh` able to support the following actions:
 ```bash
 Usage:
-  ./kcp.sh <command> [args]
+  ./server.sh <command> [args]
 
 Commands:
     install     Install the kcp server locally and kcp kubectl plugins
@@ -59,54 +59,38 @@ Arguments:
 ```
 **Remark**: The log of the kcp server started is available at <TEMP_DIR>/kcp-output.log
 
-## Set up
-
-### Clean up 
-
-If you come from an old installation, you can perform a clean up by running the following commands, otherwise jump to [next step]():
-
+To setup a demo, then execute by example the following command to create a kind cluster named `cluster1`:
 ```bash
-./kcp.sh clean
-kind delete cluster --name cluster1
-```
-
-### Create a physical cluster and install `kcp`
-
-We need a physical cluster backing the kcp server that we will create locally using `Kind`. 
- 
-```bash
-kind create cluster --name cluster1
-```
-Then, we will instal `Kcp` itself:
-
-```bash
-./kcp.sh install -v 0.8.2
-./kcp.sh start
+kind create cluster
+./kcp/server.sh install -v 0.8.2
+./kcp/server.sh start
 ```
 You can check the status of the kcp server and verify it is started:
 
 ```bash
-./kcp.sh status
+./kcp/server.sh status
 ```
 
-And finally install the [syncer](https://github.com/kcp-dev/kcp/blob/main/docs/syncer.md) in order to allow kcp server to communicate with the physical Kubernetes cluster. To do so, run the following command:
+And finally install the [syncer](https://github.com/kcp-dev/kcp/blob/main/docs/syncer.md) agent within the physical kubernetes cluster
+in order to allow the kcp server to communicate. To do so, run the following command:
 
 ```bash
 ./kcp.sh syncer -w $WORKSPACE -c cluster1
 ```
-Note that the default value for $WORKSPACE is `my-org` it will be created under the `root` org level (root:my-org)
+During the execution of the command, kcp will also create a $WORKSPACE for the user. The default value is `my-org` and will be created under the `root` org level as `root:my-org`.
+This `workspace` will be used as the logical cluster where the user will execute the different commands to install/uninstall kubernetes resources (e.g deployment, ...).
 
 Next, you can execute one of the following scenarios described hereafter.
 
 ## Scenario 1 : One workspace
 
 Objective: 
-- Create a kcp workspace `root:my-org` and move the context to this workspace, 
+- Use a kcp workspace `root:my-org` and move the context to this workspace, 
 - Deploy a Quarkus application within the workspace, 
 - Access the application deployed on the physical cluster (e.g: kubectl proxy)
 - Move the workspace one level up (e.g `root`) and verify that no deployments exist as workspaces are isolated
 
-Make sure to use kubeconfig for your local KCP, for this use the configuration generated during the installation:
+Make sure to use kubeconfig for your local KCP server, for this use the configuration generated during the installation:
 
 ```bash
 export KUBECONFIG=$TMP/.kcp/admin.kubeconfig
@@ -121,21 +105,20 @@ Verify you have a kcp server up and running
 ````
 
 ### Use a kcp workspace
+
 Be sure that you are using the correct workspace:
 
 ```bash
 kubectl kcp ws use root:$WORKSPACE
 ```
-Note that `$WORKSPACE` needs to point to the workspace used for creating the `syncer`.
+Note that `$WORKSPACE` needs to point to the same workspace where the agent `syncer` has been installed.
 
 ### Deploy a Quarkus application
 
 We deploy a Quarkus application from a predefined image
 
 ```bash
-
 kubectl create deployment quarkus --image=quay.io/rhdevelopers/quarkus-demo:v1
-
 ```
 
 ### Check that deploy went well
@@ -144,10 +127,9 @@ First, inspect the status of the rollout by running:
 
 ```bash
 kubectl rollout status deployment/quarkus
-
 ```
 
-Then, check deployments availables in the current workspace, you should have the quarkus one:
+Then, check the deployments available in the current workspace, you should have the quarkus one:
 ```bash
 kubectl get deployments
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
@@ -156,20 +138,22 @@ quarkus   1/1     1            1           16h
 
 ### Change to another workspace and verify that no deployments exist
 
-You can move to the parent workspace which is `root`:
+Move to the parent workspace which is `root`:
 ```bash
 kubectl kcp ws use ..
 ``` 
-Verify that there is no deployments in the current workspace:
+And verify that no deployments exists within the current workspace:
 
 ```bash
 kubectl get deployments                                                                                                               
 error: the server doesn't have a resource type "deployments"
 ```
 
+**Note**: This step allows to verify that kcp segregate for a user the resources deployed on the physical cluster
+
 ### End-to-end script
 
-To execute the scenario end to end, launch in a terminal the following script: `./scenario-1.sh`. If it succeeds, then you will see the following messages:
+To execute the scenario end to end, launch in a terminal the following script: `./kcp/scenario-1.sh`. If it succeeds, then you will see the following messages:
 
 ![](img/kcp_demo_log.png)
 
@@ -236,9 +220,9 @@ TODO
 
 The additional k8s resources are passed to the kcp.sh script using this command:
 ```bash
-./kcp.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
+./kcp/server.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
 ```
-If the deployment succeeds, then you will be able to see these messages logged if you execute the end to end scenario `hostname_ip=<IP> ./scenario-3.sh`
+If the deployment succeeds, then you will be able to see these messages logged if you execute the end to end scenario `hostname_ip=<IP> ./kcp/scenario-3.sh`
 ```text
 NOTE: >> k create deployment quarkus --image=quay.io/rhdevelopers/quarkus-demo:v1
 deployment.apps/quarkus created
