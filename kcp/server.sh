@@ -254,8 +254,8 @@ case $ACTION in
     rm /usr/local/bin/kubectl-{kcp,ws,workspaces} || true
 
     note "Deleting temp directory content"
-    rm -rf .kcp
-    rm -r *
+    rm -rf .kcp || true
+    rm -r * || true
     ;;
    *)
     error "Unknown command passed: $ACTION. Please use -h."

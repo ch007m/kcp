@@ -27,7 +27,6 @@ They gradually increase the complexity to validate a deployment across multiple 
 Remark: When you plan to use the end-to-end `scenario-*.sh` bash script in a terminal, it is possible to specify different parameters.
 Use the arg `-h` to get the help: `scenario-*.sh -h`.
 
-
 ## Prerequisite
 
 - [kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) is installed (if you plan to use a kind k8s cluster)
@@ -153,7 +152,8 @@ error: the server doesn't have a resource type "deployments"
 
 ### End-to-end script
 
-To execute the scenario end to end, launch in a terminal the following script: `./kcp/scenario-1.sh`. If it succeeds, then you will see the following messages:
+To execute the steps of this `end to end` scenario, open a terminal & move to the kcp folder.
+Next, execute the following script: `./scenario-1.sh`. If it succeeds, then you will see the following messages:
 
 ![](img/kcp_demo_log.png)
 

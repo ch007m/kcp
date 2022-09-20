@@ -6,9 +6,9 @@
 
 source ../common.sh
 
-./kcp.sh clean
-./kcp.sh install -v ${KCP_VERSION}
-./kcp.sh start
+./server.sh clean
+./server.sh install -v ${KCP_VERSION}
+./server.sh start
 
 # Cluster 1 => color: green label
 kind delete cluster --name cluster1
@@ -25,10 +25,10 @@ done
 echo "KCP is started :-)"
 
 kubectl ctx kind-cluster1
-./kcp.sh syncer -w my-org -c cluster1
+./server.sh syncer -w my-org -c cluster1
 
 kubectl ctx kind-cluster2
-./kcp.sh syncer -w my-org -c cluster2
+./server.sh syncer -w my-org -c cluster2
 
 KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k kcp ws root:my-org
 KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k label synctarget cluster1 color=green
