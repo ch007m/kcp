@@ -30,6 +30,12 @@ if ! command -v helm &> /dev/null; then
     warn "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     exit 1
 fi
+if ! command -v jq &> /dev/null; then
+    warn "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    warn "jq could not be found. To get jq: https://stedolan.github.io/jq/"
+    warn "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    exit 1
+fi
 
 kindCfg=$(cat <<EOF
 kind: Cluster
