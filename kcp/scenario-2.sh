@@ -4,7 +4,7 @@
 # End to end scenario 2
 #
 
-source common.sh
+source ../common.sh
 
 ./kcp.sh clean
 ./kcp.sh install -v ${KCP_VERSION}

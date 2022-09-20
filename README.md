@@ -37,10 +37,10 @@ Use the arg `-h` to get the help: `scenario-*.sh -h`.
 
 ## How to play with kcp
 
-To simplify our life when we play with the kcp server, we have developed the bash script `./kcp.sh` able to support the following actions:
+To simplify our life when we play with the kcp server, we have developed the following bash script `./kcp/server.sh` able to support the following actions:
 ```bash
 Usage:
-  ./kcp.sh <command> [args]
+  ./server.sh <command> [args]
 
 Commands:
     install     Install the kcp server locally and kcp kubectl plugins
@@ -62,8 +62,8 @@ Arguments:
 To setup a demo, then execute by example the following commands :
 ```bash
 kind create cluster
-./kcp.sh install -v 0.8.2
-./kcp.sh start
+./kcp/server.sh install -v 0.8.2
+./kcp/server.sh start
 ```
 
 Next, in a second terminal, you can execute one of the following scenarios described hereafter.
@@ -82,7 +82,7 @@ TODO
 
 ### End-to-end script
 
-To execute the scenario end to end, launch in a terminal the following script: `./scenario-1.sh`. If it succeeds, then you will see the following messages:
+To execute the scenario end to end, launch in a terminal the following script: `./kcp/scenario-1.sh`. If it succeeds, then you will see the following messages:
 
 ![](img/kcp_demo_log.png)
 
@@ -149,9 +149,9 @@ TODO
 
 The additional k8s resources are passed to the kcp.sh script using this command:
 ```bash
-./kcp.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
+./kcp/server.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
 ```
-If the deployment succeeds, then you will be able to see these messages logged if you execute the end to end scenario `hostname_ip=<IP> ./scenario-3.sh`
+If the deployment succeeds, then you will be able to see these messages logged if you execute the end to end scenario `hostname_ip=<IP> ./kcp/scenario-3.sh`
 ```text
 NOTE: >> k create deployment quarkus --image=quay.io/rhdevelopers/quarkus-demo:v1
 deployment.apps/quarkus created
