@@ -30,9 +30,11 @@ pushd $TEMP_DIR
 note "Exporting the KCP KUBECONFIG: ${KCP_CFG_PATH}"
 export KUBECONFIG=${KCP_CFG_PATH}
 
+# tag::MovingToTheRoot[]
 note "Moving to the root:${KCP_WORKSPACE} workspace"
 note ">> k kcp ws use root:${KCP_WORKSPACE}"
 k kcp ws use root:${KCP_WORKSPACE}
+# end::MovingToTheRoot[]
 
 note "Create a quarkus app within the workspace: ${KCP_WORKSPACE}"
 note ">> k create deployment quarkus --image=quay.io/rhdevelopers/quarkus-demo:v1"
