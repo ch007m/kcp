@@ -84,7 +84,7 @@ pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k workspaces create skupper-demo --en
 
 for i in 1 2
 do
-  pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k kcp workload sync cluster-${i} --syncer-image ghcr.io/kcp-dev/kcp/syncer:release-0.7 --resources=services,sites.skupper.io,requiredservices.skupper.io,providedservices.skupper.io -o ${TEMP_DIR}/cluster${i}.yml"
+  pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k kcp workload sync cluster-${i} --syncer-image ghcr.io/kcp-dev/kcp/syncer:release-0.7 --resources=services,sites.skupper.io,requiredservices.skupper.io,providedservices.skupper.io,ingresses.networking.k8s.io,services -o ${TEMP_DIR}/cluster${i}.yml"
   pe "k ctx kind-cluster${i}"
   pe "k apply -f ${TEMP_DIR}/cluster${i}.yml"
   p "Installing the Skupper CRDs & site controller"
