@@ -105,7 +105,7 @@ pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete location default"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete placement default"
 
 p "Install the skupper network controller"
-pe "k rollout status deployment/skupper-site-controller -n skupper-site-controller"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k rollout status deployment/skupper-site-controller -n skupper-site-controller"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/skupper-network-controller.yaml"
 
 p "Creating 2 namespaces: one and two"
