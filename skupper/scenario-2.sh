@@ -88,8 +88,8 @@ do
   pe "k ctx kind-cluster${i}"
   pe "k apply -f ${TEMP_DIR}/cluster${i}.yml"
   p "Installing the Skupper CRDs & site controller"
-  k apply -f ./k8s/skupper-crds.yaml
-  k apply -f ./k8s/skupper-site-controller.yaml
+  pe "k apply -f ./k8s/skupper-crds.yaml"
+  pe "k apply -f ./k8s/skupper-site-controller.yaml"
 done
 
 p "Label the synctarget with category=one|two"
@@ -104,7 +104,8 @@ p "Hack step"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete location default"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete placement default"
 
-p "Install the skupper controller"
+p "Install the skupper network controller"
+pe "sleep 20"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/skupper-network-controller.yaml"
 
 p "Creating 2 namespaces: one and two"
