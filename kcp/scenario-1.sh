@@ -6,9 +6,9 @@
 
 source ../common.sh
 
-./server.sh clean
-./server.sh install -v ${KCP_VERSION}
-./server.sh start
+../kcp.sh clean
+../kcp.sh install -v ${KCP_VERSION}
+../kcp.sh start
 
 note "Deleting and re-creating a kind k8s cluster"
 kind delete cluster --name cluster1
@@ -22,7 +22,7 @@ done
 echo "KCP is started :-)"
 
 kubectl ctx kind-cluster1
-./server.sh syncer -w my-org -c cluster1
+../kcp.sh syncer -w my-org -c cluster1
 
 note "Scenario 1: Create a workspace, deploy an application, move one level up and verify that no deployments exist as workspaces are isolated"
 

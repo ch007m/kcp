@@ -36,10 +36,10 @@ Use the arg `-h` to get the help: `scenario-*.sh -h`.
 
 ## How to play with kcp
 
-To simplify our life when we play with the kcp server, we have developed the following bash script `./kcp/server.sh` able to support the following actions:
+To simplify our life when we play with the kcp server, we have developed the following bash script `./kcp.sh` able to support the following actions:
 ```bash
 Usage:
-  ./server.sh <command> [args]
+  ./kcp.sh <command> [args]
 
 Commands:
     install     Install the kcp server locally and kcp kubectl plugins
@@ -61,13 +61,13 @@ Arguments:
 To setup a demo, then execute by example the following command to create a kind cluster named `cluster1`:
 ```bash
 kind create cluster
-./kcp/server.sh install -v 0.8.2
-./kcp/server.sh start
+./kcp.sh install -v 0.8.2
+./kcp.sh start
 ```
 You can check the status of the kcp server and verify it is started:
 
 ```bash
-./kcp/server.sh status
+./kcp.sh status
 ```
 
 And finally install the [syncer](https://github.com/kcp-dev/kcp/blob/main/docs/syncer.md) agent within the physical kubernetes cluster
@@ -221,7 +221,7 @@ TODO
 
 The additional k8s resources are passed to the kcp.sh script using this command:
 ```bash
-./kcp/server.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
+./kcp.sh syncer -w my-org -c cluster1 -r ingresses.networking.k8s.io,services
 ```
 If the deployment succeeds, then you will be able to see these messages logged if you execute the end to end scenario `hostname_ip=<IP> ./kcp/scenario-3.sh`
 ```text
