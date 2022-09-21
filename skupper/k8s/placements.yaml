@@ -1,0 +1,52 @@
+---
+apiVersion: scheduling.kcp.dev/v1alpha1
+kind: Placement
+metadata:
+  name: one
+spec:
+  locationResource:
+    group: workload.kcp.dev
+    resource: synctargets
+    version: v1alpha1
+  locationSelectors:
+  - matchLabels:
+      category: one
+  namespaceSelector:
+    matchLabels:
+      category: one
+  locationWorkspace: root:skupper-demo
+---
+apiVersion: scheduling.kcp.dev/v1alpha1
+kind: Placement
+metadata:
+  name: two
+spec:
+  locationResource:
+    group: workload.kcp.dev
+    resource: synctargets
+    version: v1alpha1
+  locationSelectors:
+  - matchLabels:
+      category: two
+  namespaceSelector:
+     matchLabels:
+      category: two
+  locationWorkspace: root:skupper-demo
+---
+apiVersion: scheduling.kcp.dev/v1alpha1
+kind: Placement
+metadata:
+  name: skupper-network-controller
+spec:
+  locationResource:
+    group: workload.kcp.dev
+    resource: synctargets
+    version: v1alpha1
+  locationSelectors:
+  - matchLabels:
+      category: two
+  namespaceSelector:
+     matchLabels:
+       kubernetes.io/metadata.name: skupper-network-controller
+  locationWorkspace: root:skupper-demo
+---
