@@ -105,15 +105,15 @@ pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete location default"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete placement default"
 
 p "Install the skupper network controller"
-pe "sleep 20"
+pe "k rollout status deployment/skupper-site-controller -n skupper-site-controller"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/skupper-network-controller.yaml"
 
 p "Creating 2 namespaces: one and two"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/namespaces.yaml"
 
-p "Deploy the bookinfo: product page part"
+p "Deploying the bookinfo application: product page part"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_one.yaml -n one"
-p "Deploy the bookinfo: details page part"
+p "Deploying the bookinfo application: details page part"
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_two.yaml -n two"
 
 p "Registering the bookinfo services for details, reviews, ratings"
