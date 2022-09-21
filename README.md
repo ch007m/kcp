@@ -11,6 +11,7 @@ Table of Contents
   * [Scenario 3 : One workspace with additional CRDs (ingress, service)](#scenario-3--one-workspace-with-additional-crds-ingress-service)
 * [Skupper](#skupper)
   * [Scenario 1 : Getting started](#scenario-1--getting-started)
+  * [Scenario 2 : Skupper and kcp](#scenario-2-skupper-and-kcp)
 
 # Introduction
 
@@ -266,5 +267,14 @@ where you pass as env var the IP address of your local machine running the clust
 If the frontend can access the backend service, then you should be able to see such `Hello world` messages wihin yiur browser
 
 ![](img/skupper_frontend_scenario-1.png)
+
+## Scenario 2 : Skupper and kcp
+
+### End-to-end script
+
+To execute this scenario, open a terminal and execute the following script
+where you pass as env var the IP address of your local machine:
+
+`HOST_MACHINE=<IP> ./skupper/scenario-1.sh`.
 
 

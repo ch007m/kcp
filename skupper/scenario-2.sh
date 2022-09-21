@@ -5,8 +5,6 @@
 #
 
 : ${HOST_MACHINE:=1.1.1.1.sslip.io}
-: ${NAMESPACE1:=west}
-: ${NAMESPACE2:=east}
 
 # Parameters to play the scenario
 TYPE_SPEED=50
@@ -51,23 +49,9 @@ if [[ ${HELM_VERSION} < "v3.0.0" ]]; then
   exit 1
 fi
 
-pe "../kcp.sh clean"
-pe "../kcp.sh install -v ${KCP_VERSION}"
+#pe "../kcp.sh clean"
+#pe "../kcp.sh install -v ${KCP_VERSION}"
 pe "../kcp.sh start"
-
-for VARIABLE in 1 2
-do
- pe "kind delete cluster --name cluster${i}"
- echo "${kindCfg}" | kind create cluster --config=- --name cluster${i}
-
- p "Installing the ingress controller using Helm within the namespace: ingress for cluster${i}"
- pe "kubectl ctx kind-cluster${i}"
- pe "helm upgrade --install ingress-nginx ingress-nginx \
-     --repo https://kubernetes.github.io/ingress-nginx \
-     --namespace ingress --create-namespace \
-     --set controller.service.type=NodePort \
-     --set controller.hostPort.enabled=true"
-done
 
 tail -f ${TEMP_DIR}/kcp-output.log | while read LOGLINE
 do
@@ -75,11 +59,67 @@ do
 done
 p "KCP is started :-)"
 
-pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k workspaces create skupper-demo --enter"
-
-for VARIABLE in 1 2
+for i in 1 2
 do
-  pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k kcp workload sync cluster-1 --syncer-image ghcr.io/kcp-dev/kcp/syncer:release-0.7 --resources=services,sites.skupper.io,requiredservices.skupper.io,providedservices.skupper.io -o cluster${i}.yml"
+ pe "kind delete cluster --name cluster${i}"
+
+ if [ "$i" == 1 ];then
+   p "Creating a kind cluster named cluster${i} where ingress is deployed"
+   echo "${kindCfg}" | kind create cluster --config=- --name cluster${i}
+
+   p "Installing the ingress controller using Helm within the namespace: ingress for cluster${i}"
+   pe "k ctx kind-cluster${i}"
+   pe "helm upgrade --install ingress-nginx ingress-nginx \
+       --repo https://kubernetes.github.io/ingress-nginx \
+       --namespace ingress --create-namespace \
+       --set controller.service.type=NodePort \
+       --set controller.hostPort.enabled=true"
+ else
+   kind create cluster --name cluster${i}
+ fi
+
 done
 
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k workspaces create skupper-demo --enter"
+
+for i in 1 2
+do
+  pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k kcp workload sync cluster-${i} --syncer-image ghcr.io/kcp-dev/kcp/syncer:release-0.7 --resources=services,sites.skupper.io,requiredservices.skupper.io,providedservices.skupper.io -o ${TEMP_DIR}/cluster${i}.yml"
+  pe "k ctx kind-cluster${i}"
+  pe "k apply -f ${TEMP_DIR}/cluster${i}.yml"
+  p "Installing the Skupper CRDs & site controller"
+  k apply -f ./k8s/skupper-crds.yaml
+  k apply -f ./k8s/skupper-site-controller.yaml
+done
+
+p "Label the synctarget with category=one|two"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k label synctarget/cluster-1 category=one"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k label synctarget/cluster-2 category=two"
+
+p "Deploy the location & placement able to map the sync target clusters"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/locations.yaml"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/placements.yaml"
+
+p "Hack step"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete location default"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k delete placement default"
+
+p "Install the skupper controller"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/skupper-network-controller.yaml"
+
+p "Creating 2 namespaces: one and two"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/namespaces.yaml"
+
+p "Deploy the bookinfo: product page part"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_one.yaml -n one"
+p "Deploy the bookinfo: details page part"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_two.yaml -n two"
+
+p "Registering the bookinfo services for details, reviews, ratings"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_one_skupper.yaml -n one"
+pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_two_skupper.yaml -n two"
+
+p "Expose the bookinfo as ingress route to access it externally on the cluster1"
+pe "k ctx kind-cluster1"
+pe "k create ingress bookinfo --class=nginx --rule=\"bookinfo.${HOST_MACHINE}/*=productpage:8090\" -n one"
 
