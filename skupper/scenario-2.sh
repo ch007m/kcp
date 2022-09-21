@@ -121,6 +121,5 @@ pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_one_skupper
 pe "KUBECONFIG=${TEMP_DIR}/${KCP_CFG_PATH} k apply -f ./k8s/bookinfo_two_skupper.yaml -n two"
 
 p "Expose the bookinfo as ingress route to access it externally on the cluster1"
-pe "k ctx kind-cluster1"
-pe "k create ingress bookinfo --class=nginx --rule=\"bookinfo.${HOST_MACHINE}/*=productpage:9080\" -n one"
+pe "k create ingress bookinfo --class=nginx --rule=\"bookinfo.${HOST_MACHINE}/*=productpage:9080\""
 
