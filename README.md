@@ -258,7 +258,10 @@ See: https://skupper.io/start/index.html
 To execute the scenario top of a kind cluster, open a terminal and execute the following script
 where you pass as env var the IP address of your local machine running the cluster:
 
-`HOST_MACHINE=<IP> ./skupper/scenario-1.sh`.
+```bash
+cd skupper
+`HOST_MACHINE=<IP> ./scenario-1.sh`
+```
 
 **Remark**: The `HOST_NAME` will be used to configure the ingress routes to access the `skupper` console and frontend. Check the messages logged to get the URLs ;-)
 
@@ -275,6 +278,10 @@ If the frontend can access the backend service, then you should be able to see s
 To execute this scenario, open a terminal and execute the following script
 where you pass as env var the IP address of your local machine:
 
-`HOST_MACHINE=<IP> ./skupper/scenario-1.sh`.
+```bash
+cd skupper
+`HOST_MACHINE=<IP> ./scenario-2.sh`
+```
+
 
 
