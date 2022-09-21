@@ -46,7 +46,7 @@ nodes:
 EOF
 )
 
-# Cluster 1 => color: green label
+# Cluster 1
 kind delete cluster --name cluster1
 echo "${kindCfg}" | kind create cluster --config=- --name cluster1
 #
