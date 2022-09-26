@@ -251,7 +251,7 @@ case $ACTION in
     done
 
     note "Removing kubectl kcp plugins"
-    rm /usr/local/bin/kubectl-{kcp,ws,workspaces} || true
+    rm -f /usr/local/bin/kubectl-{kcp,ws,workspaces} || true
 
     note "Deleting temp directory content"
     rm -rf .kcp || true
