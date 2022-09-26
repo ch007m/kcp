@@ -49,8 +49,8 @@ if [[ ${HELM_VERSION} < "v3.0.0" ]]; then
   exit 1
 fi
 
-#pe "../kcp.sh clean"
-#pe "../kcp.sh install -v ${KCP_VERSION}"
+pe "../kcp.sh clean"
+pe "../kcp.sh install -v ${KCP_VERSION}"
 pe "../kcp.sh start"
 
 tail -f ${TEMP_DIR}/kcp-output.log | while read LOGLINE
