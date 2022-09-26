@@ -2,6 +2,15 @@
 #####################################################################################################
 # Skupper resources
 #####################################################################################################
+# ---
+# apiVersion: skupper.io/v1alpha1
+# kind: Site
+# metadata:
+#   name: one
+# spec:
+#   settings:
+#     - ingress: nginx-ingress-v1
+---
 apiVersion: skupper.io/v1alpha1
 kind: RequiredService
 metadata:

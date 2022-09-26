@@ -72,6 +72,7 @@ do
    pe "helm upgrade --install ingress-nginx ingress-nginx \
        --repo https://kubernetes.github.io/ingress-nginx \
        --namespace ingress --create-namespace \
+       --set controller.extraArgs.enable-ssl-passthrough= \
        --set controller.service.type=NodePort \
        --set controller.hostPort.enabled=true"
  else
@@ -90,6 +91,7 @@ do
   p "Installing the Skupper CRDs & site controller"
   pe "k apply -f ./k8s/skupper-crds.yaml"
   pe "k apply -f ./k8s/skupper-site-controller.yaml"
+  pe "k set env deployment/skupper-site-controller SKUPPER_DEFAULT_INGRESS_HOST_SUFFIX=${HOST_MACHINE} -n skupper-site-controller"
   pe "k rollout status deployment/skupper-site-controller -n skupper-site-controller"
 done
 

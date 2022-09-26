@@ -142,4 +142,9 @@ spec:
       serviceAccountName: skupper-site-controller
       containers:
       - name: site-controller
-        image: quay.io/gordons/site-controller-v2:kcp-demo-2
+        image: quay.io/gordons/site-controller-v2:kcp-demo-3
+        env:
+        - name: SKUPPER_DEFAULT_INGRESS_MODE
+          value: nginx-ingress-v1
+        - name: SKUPPER_DEFAULT_INGRESS_HOST_SUFFIX
+          value: 1.1.1.1.sslip.io
