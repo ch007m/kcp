@@ -182,7 +182,12 @@ case $ACTION in
       wget "https://github.com/kcp-dev/kcp/releases/download/v${KCP_VERSION}/kubectl-kcp-plugin_${KCP_VERSION}_${PLATFORM}_${ARCHITECTURE}.tar.gz"
       tar -vxf kcp_${KCP_VERSION}_${PLATFORM}_${ARCHITECTURE}.tar.gz
       tar -vxf kubectl-kcp-plugin_${KCP_VERSION}_${PLATFORM}_${ARCHITECTURE}.tar.gz
-      cp bin/kubectl-* /usr/local/bin
+
+      if [ -w /usr/local/bin ]; then
+        cp bin/kubectl-* /usr/local/bin
+      else
+        sudo cp bin/kubectl-* /usr/local/bin
+      fi
     fi
     ;;
   start)
@@ -251,7 +256,11 @@ case $ACTION in
     done
 
     note "Removing kubectl kcp plugins"
-    rm -f /usr/local/bin/kubectl-{kcp,ws,workspaces} || true
+    if [ -w /usr/local/bin ]; then
+      rm -f /usr/local/bin/kubectl-{kcp,ws,workspaces} || true
+    else
+      sudo rm -f /usr/local/bin/kubectl-{kcp,ws,workspaces} || true
+    fi
 
     note "Deleting temp directory content"
     rm -rf .kcp || true
