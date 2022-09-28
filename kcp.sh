@@ -263,8 +263,7 @@ case $ACTION in
     fi
 
     note "Deleting temp directory content"
-    rm -rf .kcp || true
-    rm -r * || true
+    rm -rf ${TEMP_DIR}/* || true
     ;;
    *)
     error "Unknown command passed: $ACTION. Please use -h."
