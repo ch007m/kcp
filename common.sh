@@ -112,6 +112,6 @@ done
 : ${TEMP_DIR:="_tmp"}
 : ${KCP_CFG_PATH:=.kcp/admin.kubeconfig}
 : ${KCP_WORKSPACE:=my-org}
-: ${KCP_VERSION:=0.8.2}
+: ${KCP_VERSION:=0.9.0}
 : ${KUBE_CFG:=$HOME/.kube/config}
 : ${HOSTNAME_IP:="1.1.1.1"}

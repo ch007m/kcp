@@ -66,7 +66,7 @@ Commands:
     clean       Clean up the temp directory and remove the kcp plugins
 
 Arguments:
-    -v          Version to be installed of the kcp server. Default: 0.8.2
+    -v          Version to be installed of the kcp server. Default: 0.9.0
     -t          Temporary folder where kcp will be installed. Default: _tmp
     -c          Name of the k8s cluster where syncer is installed. Default: kind
     -w          Workspace to sync resources between kcp and target cluster. Default: my-org
@@ -145,7 +145,7 @@ done
 ## Set default values when no optional flags are passed
 #######################################################
 : ${TEMP_DIR:="_tmp"}
-: ${KCP_VERSION:=0.8.2}
+: ${KCP_VERSION:=0.9.0}
 : ${KCP_CFG_PATH:=.kcp/admin.kubeconfig}
 : ${KCP_WORKSPACE:=my-org}
 : ${KCP_API_RESOURCES:=""}
